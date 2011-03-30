@@ -41,13 +41,13 @@ if plot_on
 end
 
 for i = 1:N    
-    x_demanded = 2*pi*rand(2,1) .* sign(0.5-rand(2,1))
+    x_demanded = 2*pi*rand(2,1) .* sign(0.5-rand(2,1));
     [x_closest i_closest] = find_closest_x(X, x_demanded);
 
     u1 = compute_torque_LIP_PID(x_closest,x_demanded,u1_max)
     [T, STATE] = simulation(x_closest,u1);
     [throw distance] = ask_does_throw_happen(STATE);
-    x_new = STATE(:,end)
+    x_new = STATE(:,end);
     
     %if check_if_pose_is_legal(struct_pose,struct_biped_parameter)
     if throw 
@@ -93,7 +93,7 @@ function u1 = compute_torque_LIP_PID(x_closest,x_demanded,u1_max)
     d1 =1;
     u1 = [p1 d1] * (x_demanded - x_closest);
     if u1 > u1_max
-        u1 = u1_max
+        u1 = u1_max;
     elseif u1 < -u1_max;
         u1 = -u1_max;
     end

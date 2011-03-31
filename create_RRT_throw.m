@@ -1,4 +1,5 @@
 function [X_RRT, I_closest throw_X, DISTANCE] = create_RRT_throw(iterations,u_max,plot_on)
+%input should be a structer in the future
 
 if exist('plot_on')
 else
@@ -44,7 +45,7 @@ for i = 1:N
     x_demanded = 2*pi*rand(2,1) .* sign(0.5-rand(2,1));
     [x_closest i_closest] = find_closest_x(X, x_demanded);
 
-    u1 = compute_torque_LIP_PID(x_closest,x_demanded,u1_max)
+    u1 = compute_torque_LIP_PID(x_closest,x_demanded,u1_max);
     [T, STATE] = simulation(x_closest,u1);
     [throw distance] = ask_does_throw_happen(STATE);
     x_new = STATE(:,end);

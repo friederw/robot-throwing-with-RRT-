@@ -1,1 +1,5 @@
 Tested with MATLAB 7.11.0.584 R2010b on Mac OS X Snow Leopard
+
+To try it out just run the function auto_test() .
+
+license: GPL

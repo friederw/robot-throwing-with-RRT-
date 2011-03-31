@@ -1,6 +1,8 @@
 function [X_RRT, I_closest throw_X, DISTANCE] = create_RRT_throw(iterations,u_max,plot_on)
 %input should be a structer in the future
 
+pause_time = 0.005;
+
 if exist('plot_on')
 else
     plot_on = 1;
@@ -38,14 +40,14 @@ DISTANCE = [];
 if plot_on
     plot(X(a,1),X(b,1),'r+')
     hold on
-    pause(0.05)                    
+    pause(pause_time)                    
 end
 
 for i = 1:N    
     x_demanded = 2*pi*rand(2,1) .* sign(0.5-rand(2,1));
     [x_closest i_closest] = find_closest_x(X, x_demanded);
 
-    u1 = compute_torque_LIP_PID(x_closest,x_demanded,u1_max);
+    u1 = compute_torque_LIP_PD(x_closest,x_demanded,u1_max);
     [T, STATE] = simulation(x_closest,u1);
     [throw distance] = ask_does_throw_happen(STATE);
     x_new = STATE(:,end);
@@ -58,7 +60,7 @@ for i = 1:N
                     line([x_closest(a), x_new(a)],[x_closest(b), x_new(b)])
                     plot(throw_X(a,end),throw_X(b,end),'b+')
                     title(['iteration: ',num2str(i),'  RRT size: ',num2str(size(X,2)),'  number of throws: ',num2str(size(throw_X,2))])
-                    pause(0.05)
+                    pause(pause_time)
             end
     else    
         X = [X, x_new];
@@ -66,7 +68,7 @@ for i = 1:N
             if plot_on
                     line([x_closest(a), x_new(a)],[x_closest(b), x_new(b)])                    
                     title(['iteration: ',num2str(i),'  RRT size: ',num2str(size(X,2)),'  number of throws: ',num2str(size(throw_X,2))])
-                    pause(0.05)
+                    pause(pause_time)
             end
     end
 end
@@ -79,9 +81,13 @@ end
 
 function [x_closest i_closest] = find_closest_x(X, x_demanded)
 
+W = [100 0;
+       0 1];
+
 distance = zeros(1,size(X,2));
 for i = 1:size(X,2)
-    distance(i) = norm(X(:,i) - x_demanded);
+    e = X(:,i) - x_demanded;
+    distance(i) = e'*W*e;
 end
 [v k] = min(distance);
 
@@ -89,7 +95,7 @@ x_closest = X(:,k);
 i_closest = k;
 end
 
-function u1 = compute_torque_LIP_PID(x_closest,x_demanded,u1_max)
+function u1 = compute_torque_LIP_PD(x_closest,x_demanded,u1_max)
     p1 =1;
     d1 =1;
     u1 = [p1 d1] * (x_demanded - x_closest);

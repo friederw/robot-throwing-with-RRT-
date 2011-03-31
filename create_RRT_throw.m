@@ -1,7 +1,9 @@
-function [X_RRT, I_closest throw_X, DISTANCE] = create_RRT_throw(iterations,u_max,plot_on)
-%input should be a structer in the future
+function [X_RRT, I_closest throw_X, DISTANCE] = create_RRT_throw(options_create_RRT_throw)
 
-pause_time = 0.005;
+iterations  = options_create_RRT_throw.nIterations;
+u_max       = options_create_RRT_throw.u_max;
+plot_on     = options_create_RRT_throw.plot_on;
+pause_time  = options_create_RRT_throw.plot_pause_time;
 
 if exist('plot_on')
 else
@@ -81,8 +83,8 @@ end
 
 function [x_closest i_closest] = find_closest_x(X, x_demanded)
 
-W = [100 0;
-       0 1];
+W = [1 0;
+     0 1]; %weighting matrix
 
 distance = zeros(1,size(X,2));
 for i = 1:size(X,2)

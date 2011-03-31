@@ -1,5 +1,23 @@
+To try this project out, just run the function auto_test() .
+
 Tested with MATLAB 7.11.0.584 R2010b on Mac OS X Snow Leopard
 
-To try it out just run the function auto_test() .
-
 license: GPL
+authors: Frieder Wittmann, frieder@wittmann-online.net
+
+planed future features:
+----------------------
+
+- grow multiple RRT's incl. backwards simulation
+    - how to do backward simulation?
+        - euler 1
+        - runge kutta and minmizing difference with u
+    - all throws should be at 45 deg (grow RRTs from there with different velocity)
+
+- better criterion for throw and one sided throws only
+
+- compliance in the joints
+
+- 2 DOF and higher      
+
+- use gravity
